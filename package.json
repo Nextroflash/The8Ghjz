@@ -1,0 +1,13 @@
+{
+  "name": "mineflayer-bot",
+  "version": "1.0.0",
+  "description": "A Mineflayer bot that walks in circles.",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "mineflayer": "^4.0.0",
+    "mineflayer-pathfinder": "^1.0.0"
+  }
+}
