@@ -1,17 +1,12 @@
 const mineflayer = require('mineflayer');
-const { pathfinder, Movements, goals } = require('mineflayer-pathfinder');
 
-// Function to create a new bot
 function createBot() {
   const bot = mineflayer.createBot({
-    host: process.env.HOST || 'the8ghzlethalhvh.aternos.me', // Replace with your server IP or use an environment variable
-    port: process.env.PORT || 25565,       // Minecraft server port or use an environment variable
-    username: process.env.USERNAME || 'PornStar',  // Bot username or use an environment variable
+    host: 'the8ghzlethalhvh.aternos.me', // Replace with your server IP
+    port: 25565,       // Minecraft server port
+    username: 'PornStar1',  // Bot username
     // Optionally add password and auth for online servers
   });
-
-  // Load the pathfinder plugin
-  bot.loadPlugin(pathfinder);
 
   bot.on('spawn', () => {
     console.log('Bot has spawned');
@@ -32,10 +27,14 @@ function createBot() {
       const targetPos = bot.entity.position.offset(x, 0, z);
 
       bot.lookAt(targetPos, () => {
-        bot.pathfinder.setMovements(new Movements(bot));
-        bot.pathfinder.setGoal(new goals.GoalBlock(Math.floor(targetPos.x), Math.floor(targetPos.y), Math.floor(targetPos.z)), true);
-        step = (step + 1) % steps;
-        setTimeout(walkInCircle, 1); // Move every second
+        bot.setControlState('forward', true);
+
+        // Move to the target position and stop after reaching it
+        bot.navigate.to(targetPos, () => {
+          bot.setControlState('forward', false);
+          step = (step + 1) % steps;
+          setTimeout(walkInCircle, 1); // Move every second
+        });
       });
     }
 
@@ -53,5 +52,4 @@ function createBot() {
   });
 }
 
-// Start the bot
 createBot();
