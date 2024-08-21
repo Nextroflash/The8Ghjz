@@ -1,53 +1,26 @@
-const mineflayer = require('mineflayer');
-const  keep_alive = require('./keep_alive.js')
-const port = process.env.PORT || 4000;
+const mineflayer = require('mineflayer')
 
-function createBot() {
-  let reconnectAttempts = 0;
-  const maxReconnectAttempts = 10000000000000;
+const bot = mineflayer.createBot({
+  host: 'the8ghzlethalhvh.aternos.me', // replace with your server address
+  port: 44725,      // replace with your server port (default is 25565)
+  username: 'Nosse_ForrestSex',    // replace with your bot's username
+  // if using Microsoft account:
+  // auth: 'microsoft',
+  // if using Mojang account:
+  // auth: 'mojang'
+})
 
-  const bot = mineflayer.createBot({
-    host: 'the8ghzlethalhvh.aternos.me', // Replace with your server IP
-    port: 44725,       // Minecraft server port
-    username: 'Nosse_ForrestSex',  // Bot username
-  });
+bot.on('spawn', () => {
+  setInterval(() => {
+    bot.setControlState('jump', true)
+    setTimeout(() => bot.setControlState('jump', false), 1000) // Stop jumping after 1 second
+  }, 100) // Jump every 2 seconds
+})
 
-  bot.on('spawn', () => {
-    console.log('Bot has spawned');
-    reconnectAttempts = 0; // Reset reconnect attempts
-  });
+bot.on('error', (err) => {
+  console.log('Error:', err)
+})
 
-  bot.on('error', (err) => {
-    console.error('Error:', err);
-    handleDisconnect();
-  });
-
-  bot.on('end', () => {
-    console.log('Bot has disconnected. Reconnecting...');
-    handleDisconnect();
-  });
-
-  bot.on('kicked', (reason, loggedIn) => {
-    console.log(`Bot was kicked for reason: ${reason}. Logged in: ${loggedIn}`);
-    handleDisconnect();
-  });
-
-  bot.on('death', () => {
-    console.log('Bot died. Respawning...');
-    bot.spawn(); // Respawn immediately after death
-  });
-
-  function handleDisconnect() {
-    reconnectAttempts++;
-    if (reconnectAttempts <= maxReconnectAttempts) {
-      const waitTime = Math.pow(2, reconnectAttempts) * 1; // Exponential backoff
-      console.log(`Attempting to reconnect in ${waitTime / 1} seconds...`);
-      setTimeout(createBot, waitTime);
-    } else {
-      console.log('Max reconnect attempts reached. Please check the server status.');
-      // Optionally, stop further attempts or put logic to handle manual restart
-    }
-  }
-}
-
-createBot();
+bot.on('end', () => {
+  console.log('Bot has been disconnected.')
+})
