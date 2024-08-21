@@ -3,7 +3,7 @@ const mineflayer = require('mineflayer');
 function createBot() {
   const bot = mineflayer.createBot({
     host: 'the8ghzlethalhvh.aternos.me', // Replace with your server IP
-    port: 25565,       // Minecraft server port
+    port: 44725,       // Minecraft server port
     username: 'PornStar1',  // Bot username
     // Optionally add password and auth for online servers
   });
