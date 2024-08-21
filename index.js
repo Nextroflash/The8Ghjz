@@ -1,26 +1,28 @@
-const mineflayer = require('mineflayer')
+const mineflayer = require('mineflayer');
 
-const bot = mineflayer.createBot({
-  host: 'the8ghzlethalhvh.aternos.me', // replace with your server address
-  port: 25565,      // replace with your server port (default is 25565)
-  username: 'LiveInPeace',    // replace with your bot's username
-  // if using Microsoft account:
-  // auth: 'microsoft',
-  // if using Mojang account:
-  // auth: 'mojang'
-})
+function createBot() {
+  const bot = mineflayer.createBot({
+    host: 'the8ghzlethalhvh.aternos.me',
+    port: 25565,
+    username: 'LiveInPeace'
+  });
 
-bot.on('spawn', () => {
+  bot.on('error', (err) => {
+    console.log('Error:', err);
+    bot.end(); // End the current bot session
+    setTimeout(createBot, 1000); // Attempt to reconnect after 5 seconds
+  });
+
+  bot.on('end', () => {
+    console.log('Bot has ended. Attempting to reconnect...');
+    setTimeout(createBot, 1000); // Attempt to reconnect after 5 seconds
+  });
+
+  // Make the bot jump every second
   setInterval(() => {
-    bot.setControlState('jump', true)
-    setTimeout(() => bot.setControlState('jump', false), 1000) // Stop jumping after 1 second
-  }, 100) // Jump every 2 seconds
-})
+    bot.setControlState('jump', true); // Start jumping
+    setTimeout(() => bot.setControlState('jump', false), 100); // Stop jumping after 100ms
+  }, 1000); // Jump every second
+}
 
-bot.on('error', (err) => {
-  console.log('Error:', err)
-})
-
-bot.on('end', () => {
-  console.log('Bot has been disconnected.')
-})
+createBot();
