@@ -4,7 +4,7 @@ function createBot() {
   const bot = mineflayer.createBot({
     host: 'the8ghzlethalhvh.aternos.me', // Replace with your server IP
     port: 44725,       // Minecraft server port
-    username: 'NosseAndForrestSex',  // Bot username
+    username: 'Nosse_ForrestSex',  // Bot username
   });
 
   bot.on('spawn', () => {
