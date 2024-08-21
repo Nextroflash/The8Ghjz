@@ -1,6 +1,5 @@
 const mineflayer = require('mineflayer');
 const { pathfinder, Movements, goals } = require('mineflayer-pathfinder');
-const mineflayerViewer = require('prismarine-viewer').mineflayer;
 
 function createBot() {
   const bot = mineflayer.createBot({
@@ -55,9 +54,6 @@ function createBot() {
         bot.setControlState('jump', false);
       }
     });
-
-    // Viewer to see bot's world (optional)
-    mineflayerViewer(bot, { port: 3007, firstPerson: true });
   });
 }
 
