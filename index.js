@@ -9,38 +9,8 @@ function createBot() {
     username: 'PornStar1',  // Bot username
   });
 
-  // Load the pathfinder plugin for advanced movement
-  bot.loadPlugin(pathfinder);
-
   bot.on('spawn', () => {
     console.log('Bot has spawned');
-
-    // Define the circle radius and steps
-    const radius = 10;
-    const steps = 360;
-    const angleStep = (2 * Math.PI) / steps;
-
-    let step = 0;
-
-    // Set up the movement system for the bot
-    const defaultMove = new Movements(bot);
-
-    function walkInCircle() {
-      const angle = step * angleStep;
-      const x = Math.cos(angle) * radius;
-      const z = Math.sin(angle) * radius;
-
-      const targetPos = bot.entity.position.offset(x, 0, z);
-      bot.pathfinder.setMovements(defaultMove);
-
-      const goal = new goals.GoalBlock(targetPos.x, targetPos.y, targetPos.z);
-      bot.pathfinder.setGoal(goal);
-
-      step = (step + 1) % steps;
-    }
-
-    setInterval(walkInCircle, 1000); // Move every second
-  });
 
   bot.on('error', (err) => {
     console.error('Error:', err);
