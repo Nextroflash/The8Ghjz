@@ -5,7 +5,7 @@ function createBot() {
   const bot = mineflayer.createBot({
     host: 'the8ghzlethalhvh.aternos.me', // Replace with your server IP
     port: 44725,       // Minecraft server port
-    username: 'PornStar1',  // Bot username
+    username: 'AintGotShitOnForrest',  // Bot username
   });
 
   bot.once('inject_allowed', () => {
@@ -22,14 +22,6 @@ function createBot() {
     bot.on('spawn', () => {
       console.log('Bot has spawned');
       // Your bot is now ready, but without the walking feature
-    });
-
-    bot.on('error', (err) => {
-      console.error('Error:', err);
-      if (err.code === 'ECONNREFUSED' || err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT') {
-        console.log('Connection error, retrying...');
-        setTimeout(createBot, 1000); // Attempt to reconnect after 5 seconds
-      }
     });
 
     bot.on('end', () => {
