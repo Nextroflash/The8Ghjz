@@ -1,52 +1,57 @@
 const mineflayer = require('mineflayer');
 const { pathfinder, Movements, goals } = require('mineflayer-pathfinder');
 
+// Function to create a new bot
 function createBot() {
   const bot = mineflayer.createBot({
-    host: 'the8ghzlethalhvh.aternos.me', // Replace with your server IP
-    port: 44725,       // Minecraft server port
-    username: 'AintGotShitOnForrest',  // Bot username
+    host: process.env.HOST || 'the8ghzlethalhvh.aternos.me', // Replace with your server IP or use an environment variable
+    port: process.env.PORT || 25565,       // Minecraft server port or use an environment variable
+    username: process.env.USERNAME || 'Bot',  // Bot username or use an environment variable
+    // Optionally add password and auth for online servers
   });
 
-  bot.once('inject_allowed', () => {
-    const mcData = require('minecraft-data')(bot.version);
+  // Load the pathfinder plugin
+  bot.loadPlugin(pathfinder);
 
-    if (!mcData) {
-      console.error('Failed to load Minecraft data. Exiting.');
-      return;
+  bot.on('spawn', () => {
+    console.log('Bot has spawned');
+
+    // Define the circle radius and steps
+    const radius = 10;
+    const steps = 360;
+    const angleStep = (2 * Math.PI) / steps;
+
+    let step = 0;
+
+    function walkInCircle() {
+      const angle = step * angleStep;
+      const x = Math.cos(angle) * radius;
+      const z = Math.sin(angle) * radius;
+
+      // Calculate target position relative to the bot's current position
+      const targetPos = bot.entity.position.offset(x, 0, z);
+
+      bot.lookAt(targetPos, () => {
+        bot.pathfinder.setMovements(new Movements(bot));
+        bot.pathfinder.setGoal(new goals.GoalBlock(Math.floor(targetPos.x), Math.floor(targetPos.y), Math.floor(targetPos.z)), true);
+        step = (step + 1) % steps;
+        setTimeout(walkInCircle, 1000); // Move every second
+      });
     }
 
-    // Load the pathfinder plugin for advanced movement
-    bot.loadPlugin(pathfinder);
+    // Start walking in circles
+    walkInCircle();
+  });
 
-    bot.on('spawn', () => {
-      console.log('Bot has spawned');
-      // Your bot is now ready, but without the walking feature
-    });
+  bot.on('error', (err) => {
+    console.log('Error:', err);
+  });
 
-    bot.on('end', () => {
-      console.log('Bot has disconnected. Reconnecting...');
-      setTimeout(createBot, 1000); // Reconnect after 5 seconds
-    });
-
-    bot.on('kicked', (reason, loggedIn) => {
-      console.log(`Bot was kicked for reason: ${reason}. Logged in: ${loggedIn}`);
-      setTimeout(createBot, 1000); // Reconnect after 5 seconds
-    });
-
-    bot.on('death', () => {
-      console.log('Bot died. Respawning...');
-      bot.spawn(); // Respawn immediately after death
-    });
-
-    bot.on('physicTick', () => {
-      if (!bot.entity.onGround) {
-        bot.setControlState('jump', true);
-      } else {
-        bot.setControlState('jump', false);
-      }
-    });
+  bot.on('end', () => {
+    console.log('Bot has disconnected. Reconnecting...');
+    setTimeout(createBot, 5000); // Reconnect after 5 seconds
   });
 }
 
+// Start the bot
 createBot();
