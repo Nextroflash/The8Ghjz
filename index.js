@@ -1,9 +1,10 @@
 const mineflayer = require('mineflayer');
 const  keep_alive = require('./keep_alive.js')
+const port = process.env.PORT || 4000;
 
 function createBot() {
   let reconnectAttempts = 0;
-  const maxReconnectAttempts = 5;
+  const maxReconnectAttempts = 10000000000000;
 
   const bot = mineflayer.createBot({
     host: 'the8ghzlethalhvh.aternos.me', // Replace with your server IP
@@ -39,8 +40,8 @@ function createBot() {
   function handleDisconnect() {
     reconnectAttempts++;
     if (reconnectAttempts <= maxReconnectAttempts) {
-      const waitTime = Math.pow(2, reconnectAttempts) * 1000; // Exponential backoff
-      console.log(`Attempting to reconnect in ${waitTime / 1000} seconds...`);
+      const waitTime = Math.pow(2, reconnectAttempts) * 1; // Exponential backoff
+      console.log(`Attempting to reconnect in ${waitTime / 1} seconds...`);
       setTimeout(createBot, waitTime);
     } else {
       console.log('Max reconnect attempts reached. Please check the server status.');
