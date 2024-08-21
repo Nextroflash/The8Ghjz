@@ -28,18 +28,18 @@ function createBot() {
       console.error('Error:', err);
       if (err.code === 'ECONNREFUSED' || err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT') {
         console.log('Connection error, retrying...');
-        setTimeout(createBot, 1); // Attempt to reconnect after 5 seconds
+        setTimeout(createBot, 1000); // Attempt to reconnect after 5 seconds
       }
     });
 
     bot.on('end', () => {
       console.log('Bot has disconnected. Reconnecting...');
-      setTimeout(createBot, 1); // Reconnect after 5 seconds
+      setTimeout(createBot, 1000); // Reconnect after 5 seconds
     });
 
     bot.on('kicked', (reason, loggedIn) => {
       console.log(`Bot was kicked for reason: ${reason}. Logged in: ${loggedIn}`);
-      setTimeout(createBot, 1); // Reconnect after 5 seconds
+      setTimeout(createBot, 1000); // Reconnect after 5 seconds
     });
 
     bot.on('death', () => {
